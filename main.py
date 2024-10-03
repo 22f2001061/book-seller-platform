@@ -21,10 +21,6 @@ def list_books():
         {"id": 1, "title": "Book title 1", "author": "author 1"},
         {"id": 2, "title": "Book title 2", "author": "author 2"},
         {"id": 3, "title": "Book title 3", "author": "author 3"},
-        {"id": 2, "title": "Book title 2", "author": "author 2"},
-        {"id": 3, "title": "Book title 3", "author": "author 3"},
-        {"id": 2, "title": "Book title 2", "author": "author 2"},
-        {"id": 3, "title": "Book title 3", "author": "author 3"},
     ]
     return render_template("book_list.html", books=book_list)
 
