@@ -1,18 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List of Books</title>
-</head>
+{% block content%}
 
-<body>
-    <ul>
-        {% for book in books %}
-        <li>Title: {{book['title']}} | Author: {{book['author']}}</li>
-        {% endfor %}
-    </ul>
-</body>
-
-</html>
+<ul>
+    {% for book in books %}
+    <li class="bg-secondary">Title: {{book['title']}} | Author: {{book['author']}}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
