@@ -17,6 +17,11 @@ def home():
     return render_template("index.html")
 
 
+@app.route("/register")
+def register():
+    return render_template("user/register.html")
+
+
 @app.route("/about/<user_name>")
 def about(user_name):
     age = 28
@@ -34,8 +39,8 @@ def list_books():
 
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
     app.run(debug=True)
 
 

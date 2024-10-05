@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content%}
+<div class="row mt-5">
+    <div class="col-6 offset-3 ">
+        <h2 class="text-center">Registration Form</h2>
+        <hr>
+        <form>
+            <div class="row">
+                <div class="mb-3 col">
+                    <label for="username" class="form-label">User Name</label>
+                    <input type="text" class="form-control" id="username" aria-describedby="usernameHelp">
+                    <div id="usernameHelp" class="form-text">Username should be unique without any spaces.</div>
+                </div>
+                <div class="mb-3 col">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstName">
+                </div>
+                <div class="mb-3 col">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastName">
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="mb-3 col">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <div class="mb-3 col">
+                    <label for="exampleInputPassword2" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword2">
+                </div>
+
+            </div>
+
+            <div class="row mb-3">
+                <p>Role</p>
+                <div class="d-flex gap-3">
+                    <div><input type="radio" name="role" id="">Seller</div>
+                    <div><input type="radio" name="role" id="">Buyer</div>
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
