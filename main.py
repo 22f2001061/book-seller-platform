@@ -2,6 +2,9 @@ from flask import Flask, render_template
 
 from db import db
 
+from model import User
+
+
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
@@ -31,8 +34,8 @@ def list_books():
 
 
 if __name__ == "__main__":
-    # with app.app_context():
-    #     db.create_all()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
 
 
