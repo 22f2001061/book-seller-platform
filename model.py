@@ -10,3 +10,7 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     role = db.Column(db.String)  # admin, seller, buyer
+
+
+# class Customer
+# class Professional

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 
 from db import db
 
@@ -28,6 +28,10 @@ def register():
 
         # 1. grab the data from the request
         username = request.form.get("username", "")
+        # if username is not 4 or more character
+        # flash the message saying the error -> username should atleast be 4 chars long
+        # return a redirect to the register page
+
         print("username is : ", username)
         email = request.form.get("email")
         fname = request.form.get("fname")
@@ -49,8 +53,10 @@ def register():
             db.session.add(new_user)
             db.session.commit()
             # 3. redirect with the appropriate response
+            flash("Registration successful!", "success")
             return redirect(url_for("home"))
         except Exception as e:
+            flash("Something went wrong", "danger")
             return e
 
 
