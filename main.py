@@ -57,8 +57,43 @@ def register():
             flash("Registration successful!", "success")
             return redirect(url_for("home"))
         except Exception as e:
+            # if IntegrityError with username:
+            #   msg = username exist
+            # elif integrityError with email:
+            #   msg = email already exist
+            # flash(msg, "warning")
             flash("Something went wrong", "danger")
             return e
+
+
+def check_password(curr_pass, exist_pass):
+    return curr_pass == exist_pass
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("user/login.html")
+    elif request.method == "POST":
+        # 1. get the data from the form
+        email_or_username = request.form.get("username")
+        password = request.form.get("password")
+
+        # 2. make an entry or find an entry from the database
+        existing_user = User.query.filter_by(username=email_or_username).first()
+        print(existing_user)
+        print(url_for("login"))
+        # verify the user identity
+        if existing_user:
+            if check_password(password, existing_user.password):
+                flash("Login Successfull", "info")
+                return redirect(url_for("home"))
+            else:
+                flash("Please enter correct password.", "warning")
+                return redirect(url_for("login"))
+        else:
+            flash("Username does not exist", "warning")
+            return redirect(url_for("login"))
 
 
 @app.route("/about/<user_name>")
