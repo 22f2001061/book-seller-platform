@@ -14,3 +14,9 @@ class User(db.Model):
 
 # class Customer
 # class Professional
+
+
+class Category(db.Model):
+    __tablename__ = "categories"
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String, unique=True, nullable=False)

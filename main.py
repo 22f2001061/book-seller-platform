@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from db import db
 
-from model import User
+from model import User, Category
 
 
 app = Flask(__name__)
@@ -39,6 +40,9 @@ def register():
         lname = request.form.get("lname")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
+        if password1 != password2:
+            flash("Confirm password does not match with Password", "warning")
+            return redirect(url_for("register"))
         role = request.form.get("role")
 
         # 2. make an entry to the database
@@ -48,7 +52,7 @@ def register():
                 email=email,
                 fname=fname,
                 lname=lname,
-                password=password1,
+                password=generate_password_hash(password1),
                 role=role,
             )
             db.session.add(new_user)
@@ -66,8 +70,8 @@ def register():
             return e
 
 
-def check_password(curr_pass, exist_pass):
-    return curr_pass == exist_pass
+def check_password(exist_pass, curr_pass):
+    return check_password_hash(exist_pass, curr_pass)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -85,7 +89,7 @@ def login():
         print(url_for("login"))
         # verify the user identity
         if existing_user:
-            if check_password(password, existing_user.password):
+            if check_password(existing_user.password, password):
                 flash("Login Successfull", "info")
                 return redirect(url_for("home"))
             else:
@@ -112,9 +116,36 @@ def list_books():
     return render_template("book_list.html", books=book_list)
 
 
+@app.route("/categories")
+def list_categories():
+    categoreies = Category.query.all()
+    return render_template("category/list.html", existing_categories=categoreies)
+
+
+@app.route("/create/category", methods=["GET", "POST"])
+def create_category():
+    if request.method == "GET":
+        return render_template("category/create.html")
+    elif request.method == "POST":
+        name = request.form.get("categoryName")
+        new_category = Category(name=name)
+        db.session.add(new_category)
+        db.session.commit()
+
+        flash("Category added successfully!", "success")
+        return redirect(url_for("list_categories"))
+
+
+@app.route("/edit/category/<id>", methods=["GET", "POST"])
+def edit_category(id):
+    existing_cat = Category.query.get(id)
+    if existing_cat:
+        ...
+
+
 if __name__ == "__main__":
-    # with app.app_context():
-    #     db.create_all()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
 
 

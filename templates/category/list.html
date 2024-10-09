@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between g-3 p-2 align-items-center me-5">
+    <h1>Category List</h1>
+    <a class="btn btn-primary" href="/create/category">Add cateogry</a>
+</div>
+
+<div>
+    <ul>
+        {% for category in existing_categories %}
+        <div class="d-flex justify-content-between mx-2 p-2 g-2 col-6">
+
+            <li>{{category.id}}.{{category.name}}</li>
+            <div class="d-flex g-3">
+                <a href="/edit/sections/" class="mx-2">
+                    <span>edit</span>
+                </a>
+                <a href="/delete/sections/" class="mx-2">
+                    <span>delete</span>
+                </a>
+            </div>
+
+        </div>
+        {% endfor %}
+    </ul>
+</div>
+
+{%endblock%}

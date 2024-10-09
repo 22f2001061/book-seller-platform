@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="offset-4 col-4 shadow border rounded p-3">
+            <h2 class="text-center">Create Added</h2>
+            <hr>
+            <form action="/create/category" method="post">
+                <div class="mb-3">
+                    <label for="sectionName" class="form-label">Cateogory Name</label>
+                    <input type="text" class="form-control" name="categoryName" id="sectionName" placeholder="section1">
+                </div>
+                <button class="btn btn-primary w-100" type="submit">Add Category</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{%endblock%}
