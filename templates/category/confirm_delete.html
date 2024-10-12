@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid py-3 mt-4">
+    <h2>Are you sure you want to delete the category with name {{category.name}}?</h2>
+    <form class="d-flex gap-2" href="/delete/category/{{category.id}}" method="post">
+        <button class="btn btn-danger px-3 py-2" type="submit">Delete Category</button>
+        <a class="btn btn-secondary px-3 py-2" href="/categories">Cancel</a>
+    </form>
+</div>
+
+{%endblock%}

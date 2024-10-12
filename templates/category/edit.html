@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="offset-4 col-4 shadow border rounded p-3">
+            <h2 class="text-center">Update Category</h2>
+            <hr>
+            <form action="/edit/category/{{category.id}}" method="post">
+                <div class="mb-3">
+                    <label for="sectionName" class="form-label">Cateogory Name</label>
+                    <input type="text" class="form-control" value="{{category.name}}" name="categoryName"
+                        id="sectionName" placeholder="section1">
+                </div>
+                <button class="btn btn-warning w-100" type="submit">Update Category</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{%endblock%}

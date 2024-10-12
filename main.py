@@ -140,7 +140,38 @@ def create_category():
 def edit_category(id):
     existing_cat = Category.query.get(id)
     if existing_cat:
-        ...
+        if request.method == "GET":
+            return render_template("category/edit.html", category=existing_cat)
+        elif request.method == "POST":
+            new_name = request.form.get("categoryName")
+            message = "Category update sucessfully!"
+            if new_name != existing_cat.name:
+                existing_cat.name = new_name
+                db.session.add(existing_cat)
+                db.session.commit()
+            flash(message, "info")
+            return redirect(url_for("list_categories"))
+    else:
+        return redirect(url_for("home"))
+
+
+@app.route("/delete/category/<id>", methods=["GET", "POST"])
+def delete_category(id):
+    existing_cat = Category.query.get(id)
+    if existing_cat:
+        if request.method == "GET":
+            return render_template(
+                "category/confirm_delete.html", category=existing_cat
+            )
+        elif request.method == "POST":
+            db.session.delete(existing_cat)
+            db.session.commit()
+            message = "Category deleted sucessfully!"
+            flash(message, "info")
+            return redirect(url_for("list_categories"))
+    else:
+        flash("Category with the id not found!")
+        return redirect(url_for("home"))
 
 
 if __name__ == "__main__":
