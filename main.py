@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import check_password_hash, generate_password_hash
+
+from functools import wraps
 
 from db import db
 
@@ -11,6 +13,21 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 app.config["SECRET_KEY"] = "some_secret"
 db.init_app(app)
+
+
+def login_required(role):
+    def wrapper(original):
+        @wraps(original)
+        def inner(*args, **kwargs):
+            if session.get("username") and session.get("role") == role:
+                return original(*args, **kwargs)
+            else:
+                flash(f"You need to login as {role}", "warning")
+                return redirect(url_for("login"))
+
+        return inner
+
+    return wrapper
 
 
 # http://localhost:5000/
@@ -76,6 +93,8 @@ def check_password(exist_pass, curr_pass):
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if session.get("username"):
+        return redirect(url_for("home"))
     if request.method == "GET":
         return render_template("user/login.html")
     elif request.method == "POST":
@@ -90,6 +109,8 @@ def login():
         # verify the user identity
         if existing_user:
             if check_password(existing_user.password, password):
+                session["username"] = existing_user.username
+                session["role"] = existing_user.role
                 flash("Login Successfull", "info")
                 return redirect(url_for("home"))
             else:
@@ -123,6 +144,7 @@ def list_categories():
 
 
 @app.route("/create/category", methods=["GET", "POST"])
+@login_required("admin")
 def create_category():
     if request.method == "GET":
         return render_template("category/create.html")
@@ -137,6 +159,7 @@ def create_category():
 
 
 @app.route("/edit/category/<id>", methods=["GET", "POST"])
+@login_required("admin")
 def edit_category(id):
     existing_cat = Category.query.get(id)
     if existing_cat:
@@ -156,6 +179,7 @@ def edit_category(id):
 
 
 @app.route("/delete/category/<id>", methods=["GET", "POST"])
+@login_required("admin")
 def delete_category(id):
     existing_cat = Category.query.get(id)
     if existing_cat:
