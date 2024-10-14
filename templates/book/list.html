@@ -1,10 +1,45 @@
 {% extends "base.html" %}
 
-{% block content%}
+{% block content %}
 
-<ul>
+<div class="d-flex justify-content-between g-3 p-2 align-items-center me-5">
+    <h1>Book List</h1>
+    {% if session.get("role") and session.get('role') != 'buyer' %}
+    <a class="btn btn-primary" href="/create/books">Add Book</a>
+    {%endif%}
+</div>
+
+<div class="row mx-2 p-2">
     {% for book in books %}
-    <li class="bg-secondary">Title: {{book['title']}} | Author: {{book['author']}}</li>
+    <div class="col-3">
+        <div class="card">
+            <div class="card-body">
+                <form action="/request/books/{{book.book_id}}" method="post">
+                    <div class="d-flex justify-content-between my-2">
+                        <h5 class="card-title">{{ book.title}}</h5>
+                        {% if session.get("role") and session.get("role") != 'buyer' %}
+
+                        <div class="d-flex gap-3"><a class="btn btn-warning">Edit</a><a
+                                class="btn btn-danger">Delete</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <img class="img-fluid h-20" src="http://localhost:5000/static/uploads/{{book.thumbnail}}" />
+                    <p class="card-text">{{book.description}}</p>
+                    <button type="submit" class="btn btn-primary">Request Book</button>
+                </form>
+            </div>
+        </div>
+    </div>
     {% endfor %}
-</ul>
+</div>
+{%endblock%}
+
+{% block script %}
+
+<script>
+
+</script>
+
+
 {% endblock %}

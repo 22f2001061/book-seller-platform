@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="offset-4 col-4 shadow border rounded p-3">
+            <h2 class="text-center">Create Book</h2>
+            <hr>
+            <form action="/create/books" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="bookTitle" class="form-label">Book Title</label>
+                    <input type="text" class="form-control" name="bookTitle" id="bookTitle" placeholder="Book 1 title"
+                        required>
+                </div>
+                <!-- <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" name="description" id="description"
+                        placeholder="Book description" required>
+                </div> -->
+                <div class="mb-3">
+                    <label for="bookContent" class="form-label">Book Content</label>
+                    <input type="file" class="form-control" name="bookFile" id="bookContent" required>
+                </div>
+                <div class="mb-3">
+                    <label for="bookThumbnail" class="form-label">Book Thumbnail</label>
+                    <input type="file" class="form-control" name="thumbnail" id="bookThumbnail" required>
+                </div>
+                <div class="mb-3">
+                    <label for="authorName" class="form-label">Author Name</label>
+                    <input type="text" class="form-control" name="authorName" id="authorName" placeholder="Author 1"
+                        required>
+                </div>
+                <div class="mb-3">
+                    <label for="categoryName" class="form-label">Select category</label>
+                    <select type="text" class="form-control" name="categoryId" id="categoryId" placeholder="Author 1"
+                        required>
+                        <option value="">---Select category----</option>
+                        {% for category in available_categories %}
+                        <option value="{{category.category_id}}">{{category.name}}</option>
+                        {%endfor%}
+                    </select>
+                </div>
+                <button class="btn btn-primary w-100" type="submit">Add Book</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{%endblock%}

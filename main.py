@@ -3,31 +3,25 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from functools import wraps
 
-from db import db
+from app.db import db
 
-from model import User, Category
+from app.models import User, Category
+
+from app.config import LocalConfig
+from app.utils import login_required, check_password
+
+from app.bp.book import bp as book_bp
+from app.bp.category import bp as category_bp
 
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-app.config["SECRET_KEY"] = "some_secret"
+
+app.config.from_object(LocalConfig)
 db.init_app(app)
 
-
-def login_required(role):
-    def wrapper(original):
-        @wraps(original)
-        def inner(*args, **kwargs):
-            if session.get("username") and session.get("role") == role:
-                return original(*args, **kwargs)
-            else:
-                flash(f"You need to login as {role}", "warning")
-                return redirect(url_for("login"))
-
-        return inner
-
-    return wrapper
+app.register_blueprint(book_bp)
+app.register_blueprint(category_bp)
 
 
 # http://localhost:5000/
@@ -87,10 +81,6 @@ def register():
             return e
 
 
-def check_password(exist_pass, curr_pass):
-    return check_password_hash(exist_pass, curr_pass)
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if session.get("username"):
@@ -121,87 +111,23 @@ def login():
             return redirect(url_for("login"))
 
 
+@app.route("/logout")
+def logout():
+    session.pop("username")
+    session.pop("role")
+    return redirect(url_for("home"))
+
+
 @app.route("/about/<user_name>")
 def about(user_name):
     age = 28
     return render_template("about.html", name=user_name, age=age)
 
 
-@app.route("/books")
-def list_books():
-    book_list = [
-        {"id": 1, "title": "Book title 1", "author": "author 1"},
-        {"id": 2, "title": "Book title 2", "author": "author 2"},
-        {"id": 3, "title": "Book title 3", "author": "author 3"},
-    ]
-    return render_template("book_list.html", books=book_list)
-
-
-@app.route("/categories")
-def list_categories():
-    categoreies = Category.query.all()
-    return render_template("category/list.html", existing_categories=categoreies)
-
-
-@app.route("/create/category", methods=["GET", "POST"])
-@login_required("admin")
-def create_category():
-    if request.method == "GET":
-        return render_template("category/create.html")
-    elif request.method == "POST":
-        name = request.form.get("categoryName")
-        new_category = Category(name=name)
-        db.session.add(new_category)
-        db.session.commit()
-
-        flash("Category added successfully!", "success")
-        return redirect(url_for("list_categories"))
-
-
-@app.route("/edit/category/<id>", methods=["GET", "POST"])
-@login_required("admin")
-def edit_category(id):
-    existing_cat = Category.query.get(id)
-    if existing_cat:
-        if request.method == "GET":
-            return render_template("category/edit.html", category=existing_cat)
-        elif request.method == "POST":
-            new_name = request.form.get("categoryName")
-            message = "Category update sucessfully!"
-            if new_name != existing_cat.name:
-                existing_cat.name = new_name
-                db.session.add(existing_cat)
-                db.session.commit()
-            flash(message, "info")
-            return redirect(url_for("list_categories"))
-    else:
-        return redirect(url_for("home"))
-
-
-@app.route("/delete/category/<id>", methods=["GET", "POST"])
-@login_required("admin")
-def delete_category(id):
-    existing_cat = Category.query.get(id)
-    if existing_cat:
-        if request.method == "GET":
-            return render_template(
-                "category/confirm_delete.html", category=existing_cat
-            )
-        elif request.method == "POST":
-            db.session.delete(existing_cat)
-            db.session.commit()
-            message = "Category deleted sucessfully!"
-            flash(message, "info")
-            return redirect(url_for("list_categories"))
-    else:
-        flash("Category with the id not found!")
-        return redirect(url_for("home"))
-
-
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run()
 
 
 # @app.route("create_user")
