@@ -14,7 +14,7 @@
     <div class="col-3">
         <div class="card">
             <div class="card-body">
-                <form action="/request/books/{{book.book_id}}" method="post">
+                <form action="/request/books/{{book.id}}" method="post">
                     <div class="d-flex justify-content-between my-2">
                         <h5 class="card-title">{{ book.title}}</h5>
                         {% if session.get("role") and session.get("role") != 'buyer' %}

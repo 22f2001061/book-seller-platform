@@ -18,15 +18,20 @@ bp = Blueprint(
 
 # CRUD on Books
 # base/books -> list of all the books
+
+
+# q = "Book" -> case 1
+# q = "book" -> case 2
 @bp.route("/books")
 def list_books():
     query = request.args.get("q")
     books = Book.query.all()
     if query:
+        # %query%
         query = f"%{query}%"
         books = Book.query.filter(
             or_(
-                Book.title.like(query),
+                Book.title.ilike(query),
                 Book.author.ilike(query),
             )
         ).all()

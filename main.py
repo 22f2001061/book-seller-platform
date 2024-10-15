@@ -12,6 +12,7 @@ from app.utils import login_required, check_password
 
 from app.bp.book import bp as book_bp
 from app.bp.category import bp as category_bp
+from app.bp.requests import bp as request_bp
 
 
 app = Flask(__name__)
@@ -22,6 +23,7 @@ db.init_app(app)
 
 app.register_blueprint(book_bp)
 app.register_blueprint(category_bp)
+app.register_blueprint(request_bp)
 
 
 # http://localhost:5000/
@@ -99,6 +101,7 @@ def login():
         # verify the user identity
         if existing_user:
             if check_password(existing_user.password, password):
+                session["user_id"] = existing_user.id
                 session["username"] = existing_user.username
                 session["role"] = existing_user.role
                 flash("Login Successfull", "info")
@@ -113,15 +116,10 @@ def login():
 
 @app.route("/logout")
 def logout():
+    session.pop("user_id")
     session.pop("username")
     session.pop("role")
     return redirect(url_for("home"))
-
-
-@app.route("/about/<user_name>")
-def about(user_name):
-    age = 28
-    return render_template("about.html", name=user_name, age=age)
 
 
 if __name__ == "__main__":
