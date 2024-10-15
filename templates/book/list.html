@@ -14,7 +14,7 @@
     <div class="col-3">
         <div class="card">
             <div class="card-body">
-                <form action="/request/books/{{book.id}}" method="post">
+                <form action="/request/books/{{book.id}}" id="requestForm" method="post">
                     <div class="d-flex justify-content-between my-2">
                         <h5 class="card-title">{{ book.title}}</h5>
                         {% if session.get("role") and session.get("role") != 'buyer' %}
@@ -26,7 +26,7 @@
                     </div>
                     <img class="img-fluid h-20" src="http://localhost:5000/static/uploads/{{book.thumbnail}}" />
                     <p class="card-text">{{book.description}}</p>
-                    <button type="submit" class="btn btn-primary">Request Book</button>
+                    <button type="button" onclick="handleSubmit(event)" class="btn btn-primary">Request Book</button>
                 </form>
             </div>
         </div>
@@ -38,6 +38,14 @@
 {% block script %}
 
 <script>
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        let requestForm = document.getElementById("requestForm")
+        if (confirm("Are you sure you want to request this book?")) {
+            requestForm.submit()
+        }
+    }
 
 </script>
 
