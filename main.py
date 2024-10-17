@@ -141,8 +141,12 @@ def sample_chart():
 
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
+    from app.db_factory import seed_data
+
+    # with app.app_context():
+    #     seed_data()
     app.run()
 
 
