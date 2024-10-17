@@ -5,7 +5,7 @@ from functools import wraps
 
 from app.db import db
 
-from app.models import User, Category
+from app.models import User, Category, BookRequest
 
 from app.config import LocalConfig
 from app.utils import login_required, check_password
@@ -29,7 +29,20 @@ app.register_blueprint(request_bp)
 # http://localhost:5000/
 @app.route("/")
 def home():
-    return render_template("index.html")
+    buyer_requests = []
+    all_requests = []
+    user_role = session.get("role")
+    if user_role:
+        if user_role == "admin":
+            all_requests = BookRequest.query.all()
+        elif user_role == "buyer":
+            buyer_id = session.get("user_id")
+            buyer_requests = BookRequest.query.filter_by(user_id=buyer_id).all()
+        return render_template(
+            "index.html", all_requests=all_requests, buyer_requests=buyer_requests
+        )
+    else:
+        return redirect(url_for("login"))
 
 
 @app.route("/register", methods=["GET", "POST"])

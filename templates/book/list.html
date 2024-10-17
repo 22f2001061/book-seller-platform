@@ -26,7 +26,9 @@
                     </div>
                     <img class="img-fluid h-20" src="http://localhost:5000/static/uploads/{{book.thumbnail}}" />
                     <p class="card-text">{{book.description}}</p>
+                    {% if session.get('role') not in ('seller', 'admin') %}
                     <button type="button" onclick="handleSubmit(event)" class="btn btn-primary">Request Book</button>
+                    {% endif %}
                 </form>
             </div>
         </div>

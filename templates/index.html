@@ -1,7 +1,53 @@
 {% extends "base.html" %}
 
 {% block content%}
+<div class="row mx-4 px-2">
+    <div class="d-flex justify-content-between">
+        <div>
+            <h1 class="text-success">Dashboard</h1>
+        </div>
+        <div>
+            <h3>
+                Welcome, {{session.get("role")}}
+            </h3>
+        </div>
+    </div>
+</div>
+<div class="container">
+    {% if all_requests | length != 0 %}
+    <h2>Recent requests</h2>
+    <div class="row div col">
+        <table>
+            <thead>
+                <tr>
 
-<h1 class="text-success">Homepage</h1>
-
+                    <th>Sr. No</th>
+                    <th>Book Id</th>
+                    <th>User Id</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in all_requests %}
+                <tr>
+                    <div class="">
+                        <td>{{ loop.index }}</td>
+                        <td>{{request.book_id}}</td>
+                        <td>{{ request.user_id}}</td>
+                        <td>{{ request.status}}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="/request/accept/{{ request.id}}" class="btn btn-primary">Accept</a>
+                                <a href="/request/reject/{{ request.id}}" class="btn btn-danger">Reject</a>
+                            </div>
+                        </td>
+                    </div>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
